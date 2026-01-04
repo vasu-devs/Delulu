@@ -1,7 +1,7 @@
 "use client";
 
 import { AnalysisResult, Transaction } from "../types";
-import { Utensils, CreditCard, ShoppingBag, Zap, MoreHorizontal, IndianRupee } from "lucide-react";
+import { Utensils, CreditCard, ShoppingBag, Zap, MoreHorizontal, IndianRupee, Ghost, Flame } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface SpendingBreakdownProps {
