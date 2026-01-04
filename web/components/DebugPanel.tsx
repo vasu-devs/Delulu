@@ -1,8 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Terminal, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Terminal } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface DebugPanelProps {
     raw: string;
@@ -13,43 +13,36 @@ export default function DebugPanel({ raw, cleaned }: DebugPanelProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="border border-zinc-800 rounded-2xl overflow-hidden mt-12 bg-zinc-950">
+        <div className="mt-12">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-4 hover:bg-zinc-900 transition-colors"
+                className="flex items-center gap-2 text-slate-300 hover:text-slate-500 transition-colors mx-auto uppercase text-[10px] font-black tracking-widest bg-white px-6 py-3 rounded-full border border-slate-100 shadow-sm"
             >
-                <div className="flex items-center gap-2 text-zinc-400 font-mono text-xs uppercase tracking-widest font-bold">
-                    <Terminal className="w-4 h-4" />
-                    <span>Data Engineering Logs (Raw vs Cleaned)</span>
-                </div>
-                {isOpen ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
+                <Terminal className="w-3 h-3" />
+                {isOpen ? "Stow Sensitive Data" : "Inspect Raw Records"}
+                {isOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </button>
 
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: "auto" }}
-                        exit={{ height: 0 }}
-                        className="overflow-hidden"
-                    >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border-t border-zinc-800">
-                            <div>
-                                <span className="text-[10px] text-zinc-600 font-black uppercase mb-2 block">Raw PDF Dump</span>
-                                <pre className="bg-black/50 p-4 rounded-xl text-[10px] text-zinc-500 font-mono h-48 overflow-y-auto whitespace-pre-wrap leading-relaxed outline-none">
-                                    {raw || "No raw data available"}
-                                </pre>
-                            </div>
-                            <div>
-                                <span className="text-[10px] text-emerald-900 font-black uppercase mb-2 block">Cleaned Extraction</span>
-                                <pre className="bg-emerald-950/20 p-4 rounded-xl text-[10px] text-emerald-600 font-mono h-48 overflow-y-auto whitespace-pre-wrap leading-relaxed border border-emerald-900/10">
-                                    {cleaned || "No cleaned data available"}
-                                </pre>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 overflow-hidden"
+                >
+                    <div className="space-y-3">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Original Transmission</h4>
+                        <pre className="bg-slate-50 p-8 rounded-[2rem] text-[10px] font-medium text-slate-400 overflow-auto max-h-[400px] border border-slate-100 custom-scrollbar leading-relaxed">
+                            {raw}
+                        </pre>
+                    </div>
+                    <div className="space-y-3">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-4">Sanitized Records</h4>
+                        <pre className="bg-white p-8 rounded-[2rem] text-[10px] font-medium text-indigo-600/60 overflow-auto max-h-[400px] border border-slate-100 shadow-inner custom-scrollbar leading-relaxed">
+                            {cleaned}
+                        </pre>
+                    </div>
+                </motion.div>
+            )}
         </div>
     );
 }

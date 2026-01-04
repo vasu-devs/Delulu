@@ -11,6 +11,7 @@ router = APIRouter()
 async def analyze_data(
     text: Optional[str] = Form(None)
 ):
+    print(f"📥 Received analysis request for {len(text) if text else 0} chars")
     # Logic to process text or file
     cleaned = clean_transaction_text(text)
     analysis = await extract_transactions_python(cleaned)

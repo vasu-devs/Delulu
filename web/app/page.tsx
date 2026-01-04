@@ -88,11 +88,12 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-red-500/30">
-      {/* Background Decor */}
+    <main className="min-h-screen bg-[#FDFCFB] text-slate-800 font-sans selection:bg-rose-100 selection:text-rose-900">
+      {/* Background Decor - Stationery Pastels */}
       <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-emerald-600/5 rounded-full blur-[120px]" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-50/40 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-rose-50/40 rounded-full blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-[0.02] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px]" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-16">
@@ -100,179 +101,194 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center lg:justify-start gap-4 mb-6"
+            className="flex items-center justify-center lg:justify-start gap-4 mb-8"
           >
-            <div className="bg-zinc-800 p-3 rounded-2xl border border-zinc-700 shadow-xl">
-              <Ghost className="w-8 h-8 text-white" />
+            <div className="bg-white p-3.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex items-center justify-center">
+              <Ghost className="w-8 h-8 text-indigo-300" />
             </div>
-            <span className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px]">
-              Project Delulu v1.0
-            </span>
+            <div className="flex flex-col">
+              <span className="text-slate-400 font-extrabold uppercase tracking-[0.4em] text-[10px] leading-tight mb-1">
+                Project Delulu
+              </span>
+              <span className="text-indigo-300 font-bold text-[10px] uppercase tracking-widest">Stationery Edition v1.5</span>
+            </div>
           </motion.div>
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent italic">
-            Financial <span className="text-red-500 underline decoration-red-900/50">Reality</span> Check.
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-slate-900 font-serif">
+            Financial <span className="text-indigo-400 underline decoration-indigo-100 decoration-8 underline-offset-8">Reality</span>.
           </h1>
-          <p className="text-xl text-zinc-500 font-medium max-w-2xl leading-relaxed mx-auto lg:mx-0">
-            Stop being <span className="text-zinc-300 font-bold italic">Delulu</span>. Let AI analyze your messy bank statements and remind you that you're not the next Ambani. Yet.
+          <p className="text-xl md:text-2xl text-slate-500 font-semibold max-w-2xl leading-relaxed mx-auto lg:mx-0 tracking-tight">
+            A gentle, paper-thin journal of your <span className="text-rose-400 font-black font-serif">Delulu</span> spending habits. 💌
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Input Panel */}
-          <div className="lg:col-span-5 space-y-8">
-            <section className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.02] -rotate-12 group-hover:rotate-0 transition-transform duration-700">
-                <ShieldAlert className="w-64 h-64" />
-              </div>
+        <div className="space-y-16">
+          {/* Input Panel - The Memo Board */}
+          <section className="bg-white border border-slate-100 p-8 md:p-14 rounded-[4rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.03)] relative overflow-hidden group max-w-4xl mx-auto w-full">
+            <div className="absolute top-0 right-0 p-12 opacity-[0.03] -rotate-12 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none">
+              <ShieldAlert className="w-80 h-80 text-indigo-200" />
+            </div>
 
-              <div className="flex bg-black p-1.5 rounded-2xl mb-8 border border-zinc-800">
-                <button
-                  onClick={() => setActiveTab("pdf")}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${activeTab === "pdf" ? "bg-zinc-800 text-white shadow-xl" : "text-zinc-600 hover:text-zinc-400"}`}
-                >
-                  <Upload className="w-4 h-4" /> Statement
-                </button>
-                <button
-                  onClick={() => setActiveTab("text")}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${activeTab === "text" ? "bg-zinc-800 text-white shadow-xl" : "text-zinc-600 hover:text-zinc-400"}`}
-                >
-                  <FileText className="w-4 h-4" /> Text
-                </button>
-              </div>
-
-              <div className="min-h-[300px]">
-                <AnimatePresence mode="wait">
-                  {activeTab === "pdf" ? (
-                    <motion.div
-                      key="pdf-input"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                    >
-                      <div className="bg-zinc-950 p-1 rounded-[2rem] border border-zinc-800/50">
-                        <FileUpload onFileSelect={(f: File | null) => setFile(f)} />
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="text-input"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                    >
-                      <textarea
-                        placeholder="Paste raw bank statement text here..."
-                        value={rawText}
-                        onChange={(e) => setRawText(e.target.value)}
-                        className="w-full h-64 p-6 rounded-[2rem] bg-zinc-950 border border-zinc-800 text-zinc-300 placeholder:text-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500/50 transition-all outline-none resize-none font-mono text-sm leading-relaxed"
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
+            <div className="flex bg-slate-50/80 p-2 rounded-[2rem] mb-12 border border-slate-100 max-w-sm mx-auto shadow-inner">
               <button
-                onClick={handleAnalyze}
-                disabled={loading}
-                className="w-full mt-8 bg-white hover:bg-zinc-200 text-black font-black py-5 rounded-[1.5rem] transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-sm uppercase tracking-[0.2em]"
+                onClick={() => setActiveTab("pdf")}
+                className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-[1.5rem] font-extrabold text-xs uppercase tracking-widest transition-all ${activeTab === "pdf" ? "bg-white text-indigo-500 shadow-md border border-slate-100" : "text-slate-400 hover:text-slate-600"}`}
               >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-4 border-black/20 border-t-black rounded-full animate-spin" />
-                    <span>Analyzing...</span>
-                  </>
-                ) : (
-                  <>Extract Reality 🔥</>
-                )}
+                <Upload className="w-4 h-4" /> Memo
               </button>
+              <button
+                onClick={() => setActiveTab("text")}
+                className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-[1.5rem] font-extrabold text-xs uppercase tracking-widest transition-all ${activeTab === "text" ? "bg-white text-indigo-500 shadow-md border border-slate-100" : "text-slate-400 hover:text-slate-600"}`}
+              >
+                <FileText className="w-4 h-4" /> Script
+              </button>
+            </div>
 
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-3"
-                >
-                  <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
-                  <p className="text-red-500 text-xs font-bold leading-relaxed">{error}</p>
-                </motion.div>
-              )}
-            </section>
-          </div>
-
-          {/* Results Panel */}
-          <div className="lg:col-span-7">
             <AnimatePresence mode="wait">
-              {analysis ? (
+              {activeTab === "pdf" ? (
                 <motion.div
-                  key="results"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-10"
+                  key="pdf-input"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-[#FAF9F6] p-1.5 rounded-[3rem] border border-slate-100 shadow-inner"
                 >
-                  <RoastCard roast={roast} />
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2rem] flex flex-col justify-center">
-                      <div className="flex items-center gap-2 mb-2 text-zinc-500">
-                        <Wallet className="w-4 h-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Wasted on 'Treats'</span>
-                      </div>
-                      <div className="text-4xl font-black text-white flex items-baseline gap-2">
-                        <span className="text-zinc-500 text-xl font-normal tracking-tight">₹</span>
-                        {analysis.transactions.filter(t => t.is_impulsive).reduce((s, t) => s + t.amount, 0).toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2rem] flex flex-col justify-center">
-                      <div className="flex items-center gap-2 mb-2 text-zinc-500">
-                        <IndianRupee className="w-4 h-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Financial Health</span>
-                      </div>
-                      <div className="text-4xl font-black text-emerald-500">
-                        {analysis.financial_health_score}<span className="text-zinc-700 text-lg">/100</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <SpendingBreakdown analysis={analysis} />
-
-                  <WealthChart data={wealthData} />
-
-                  <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2rem]">
-                    <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2 uppercase tracking-tight text-[12px]">
-                      Statement Breakdown
-                    </h3>
-                    <TransactionTable analysis={analysis} />
-                  </div>
-
-                  <DebugPanel raw={rawDump} cleaned={cleanedDump} />
-
-                  <button
-                    onClick={clear}
-                    className="flex items-center gap-2 text-zinc-600 hover:text-white transition-colors mx-auto font-black uppercase text-[10px] tracking-[0.3em] py-8"
-                  >
-                    <Trash2 className="w-4 h-4" /> Reset Analysis
-                  </button>
+                  <FileUpload onFileSelect={(f: File | null) => setFile(f)} />
                 </motion.div>
               ) : (
                 <motion.div
-                  key="placeholder"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="h-full min-h-[600px] flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-zinc-800 rounded-[3rem] bg-zinc-900/20"
+                  key="text-input"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
                 >
-                  <div className="bg-zinc-900/50 p-8 rounded-full mb-8 border border-zinc-800">
-                    <Flame className="w-12 h-12 text-zinc-700" />
-                  </div>
-                  <h3 className="text-3xl font-black text-zinc-600 uppercase tracking-tighter italic">Ready to analyze?</h3>
-                  <p className="text-zinc-500 mt-4 max-w-xs font-medium leading-relaxed">
-                    Upload your PDF and reveal the opportunity cost of your coffee addiction.
-                  </p>
+                  <textarea
+                    placeholder="Softly record your financial indiscretions here..."
+                    value={rawText}
+                    onChange={(e) => setRawText(e.target.value)}
+                    className="w-full h-80 p-10 rounded-[3rem] bg-[#FAF9F6] border border-slate-100 text-slate-700 placeholder:text-slate-300 focus:ring-[12px] focus:ring-indigo-500/5 focus:border-indigo-100 transition-all outline-none resize-none font-bold text-lg leading-relaxed shadow-inner"
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+
+            <button
+              onClick={handleAnalyze}
+              disabled={loading}
+              className="w-full mt-12 bg-indigo-500 hover:bg-indigo-600 text-white font-black py-7 rounded-[2.5rem] transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-4 text-sm uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(99,102,241,0.3)] hover:shadow-[0_25px_50px_-10px_rgba(99,102,241,0.4)]"
+            >
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-[3px] border-white/20 border-t-white rounded-full animate-spin" />
+                  <span>Drafting Reality...</span>
+                </>
+              ) : (
+                <>Analyze Memo ✨</>
+              )}
+            </button>
+
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-10 p-8 rounded-[2rem] bg-rose-50/50 border border-rose-100 flex items-center gap-5 shadow-sm"
+              >
+                <AlertTriangle className="w-8 h-8 text-rose-300 shrink-0" />
+                <p className="text-rose-500 text-[10px] font-black uppercase tracking-[0.1em] leading-loose">{error}</p>
+              </motion.div>
+            )}
+          </section>
+
+          {/* Results Panel - The Published Report */}
+          <AnimatePresence mode="wait">
+            {analysis ? (
+              <motion.div
+                key="results"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="space-y-16"
+              >
+                {/* The Mindful Memo */}
+                <div className="max-w-4xl mx-auto">
+                  <RoastCard roast={roast} />
+                </div>
+
+                {/* Growth Metrics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <motion.div
+                    whileHover={{ y: -8 }}
+                    className="bg-white border border-slate-100 p-12 rounded-[3.5rem] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.03)] flex flex-col justify-center relative overflow-hidden group"
+                  >
+                    <div className="absolute top-0 right-0 p-10 opacity-[0.04] text-indigo-500 group-hover:scale-110 transition-transform duration-700">
+                      <Wallet className="w-32 h-32" />
+                    </div>
+                    <div className="flex items-center gap-3 mb-4 text-slate-400">
+                      <Wallet className="w-5 h-5 text-indigo-200" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em]">Total Joy Investment</span>
+                    </div>
+                    <div className="text-6xl font-black text-slate-900 flex items-baseline gap-2">
+                      <span className="text-indigo-100 text-3xl font-bold tracking-tighter">₹</span>
+                      {analysis.transactions.filter(t => t.is_impulsive).reduce((s, t) => s + t.amount, 0).toLocaleString()}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -8 }}
+                    className="bg-white border border-slate-100 p-12 rounded-[3.5rem] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.03)] flex flex-col justify-center relative overflow-hidden group"
+                  >
+                    <div className="absolute top-0 right-0 p-10 opacity-[0.04] text-[#5EC299] group-hover:scale-110 transition-transform duration-700">
+                      <IndianRupee className="w-32 h-32" />
+                    </div>
+                    <div className="flex items-center gap-3 mb-4 text-slate-400">
+                      <IndianRupee className="w-5 h-5 text-[#A7F3D0]" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em]">Mindfulness Score</span>
+                    </div>
+                    <div className="text-6xl font-black text-[#5EC299] tracking-tighter">
+                      {analysis.financial_health_score}<span className="text-slate-200 text-2xl font-bold ml-1">/100</span>
+                    </div>
+                  </motion.div>
+                </div>
+
+                <SpendingBreakdown analysis={analysis} />
+
+                {/* Strategic Vision */}
+                <div className="space-y-10 pt-16 border-t border-slate-100">
+                  <div className="text-center md:text-left px-4">
+                    <h3 className="text-3xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">Strategic Vision</h3>
+                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.5em] mt-3">The soft path of intentional growth</p>
+                  </div>
+                  <div className="bg-white p-12 rounded-[4rem] border border-slate-100 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.02)]">
+                    <WealthChart data={wealthData} />
+                  </div>
+                </div>
+
+                <div className="pt-16 border-t border-slate-100">
+                  <DebugPanel raw={rawDump} cleaned={cleanedDump} />
+                </div>
+
+                <button
+                  onClick={clear}
+                  className="flex items-center gap-3 text-slate-200 hover:text-indigo-300 transition-all hover:tracking-[0.8em] duration-500 mx-auto font-black uppercase text-[10px] tracking-[0.6em] py-16"
+                >
+                  <Trash2 className="w-4 h-4" /> Shred These Pages
+                </button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="placeholder"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="h-full min-h-[550px] flex flex-col items-center justify-center text-center p-16 border-[4px] border-dashed border-[#F1F5F9]/80 rounded-[5rem] bg-white/40"
+              >
+                <div className="bg-white p-12 rounded-[2.5rem] mb-10 shadow-sm border border-slate-100">
+                  <Flame className="w-20 h-20 text-rose-50 animate-pulse" />
+                </div>
+                <h3 className="text-5xl font-black text-[#E2E8F0] uppercase tracking-tighter italic leading-none">Mindful Entry</h3>
+                <p className="text-slate-300 mt-8 max-w-sm font-black uppercase tracking-[0.3em] text-[10px] leading-[2.5]">
+                  Place your statement on the desk and let us begin the soft deconstruction...
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </main>
