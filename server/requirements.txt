@@ -1,0 +1,10 @@
+fastapi[standard]
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+python-dotenv
+groq
+pydantic
+pydantic-settings
+pytest
+httpx
