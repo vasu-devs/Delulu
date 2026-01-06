@@ -101,13 +101,15 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-8">
-              <Image
-                src="/assets/rupee-roast/logo.png"
-                alt="Piggy Stash"
-                width={80}
-                height={80}
-                className="w-20 h-20 hover:scale-110 transition-transform cursor-pointer drop-shadow-lg"
-              />
+              <div className="bg-white p-2 border-2 border-black shadow-brutalist hover:scale-110 transition-transform cursor-pointer flex items-center justify-center">
+                <Image
+                  src="/assets/rupee-roast/logo.png"
+                  alt="Piggy Stash"
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 object-contain"
+                />
+              </div>
               <h1 className="text-3xl text-black font-arcade tracking-tighter leading-none">
                 RUPEE<br /><span className="text-primary drop-shadow-[2px_2px_0px_#000]">ROAST</span>
               </h1>
@@ -132,6 +134,23 @@ export default function Dashboard() {
           </div>
         </div>
       </nav>
+
+      <div className="w-full bg-primary overflow-hidden border-b-2 border-black py-2">
+        <motion.div
+          animate={{ x: [0, -1000] }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="whitespace-nowrap flex gap-8 items-center"
+        >
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="flex items-center gap-8">
+              <span className="font-arcade text-black text-xl">FINANCIAL_ROAST_PROTOCOL</span>
+              <span className="font-mono font-bold text-black/50">///</span>
+              <span className="font-arcade text-black text-xl">NO_MERCY</span>
+              <span className="font-mono font-bold text-black/50">///</span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
 
@@ -178,7 +197,7 @@ export default function Dashboard() {
                   />
                 </motion.div>
 
-                <h2 className="text-4xl md:text-7xl text-black font-arcade leading-tight tracking-tight relative z-20">
+                <h2 className="text-4xl md:text-7xl text-white font-arcade leading-tight tracking-tight relative z-20">
                   ARE YOU <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary bg-300% animate-gradient drop-shadow-[4px_4px_0px_#000] stroke-black" style={{ WebkitTextStroke: '2px black' }}>COOKED?</span>
                 </h2>
@@ -430,17 +449,27 @@ export default function Dashboard() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t-[4px] border-black bg-white py-24 px-8 font-arcade text-[10px] text-black">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-          <div className="space-y-6 text-center md:text-left">
-            <p className="text-black font-bold text-lg">RUPEE ROAST V1.2 - BUILD: HIGH_VOLTAGE_99</p>
-            <p className="opacity-60 text-xs">© 2026 ELITE CAPITAL FORENSICS. ALL REGRETS RESERVED.</p>
+      <footer className="border-t-[4px] border-black bg-primary">
+        <div className="bg-white py-24 px-8 font-arcade text-[10px] text-black border-b-4 border-black">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+            <div className="space-y-6 text-center md:text-left">
+              <p className="text-black font-bold text-lg">RUPEE ROAST V1.2 - BUILD: HIGH_VOLTAGE_99</p>
+              <p className="opacity-60 text-xs">© 2026 ELITE CAPITAL FORENSICS. ALL REGRETS RESERVED.</p>
+            </div>
+            <div className="flex gap-16 underline decoration-2 underline-offset-8">
+              <a href="#" className="hover:text-primary transition-all">TERMINAL</a>
+              <a href="#" className="hover:text-secondary transition-all">PRIVACY</a>
+              <a href="#" className="hover:text-accent transition-all">SHELL</a>
+            </div>
           </div>
-          <div className="flex gap-16 underline decoration-2 underline-offset-8">
-            <a href="#" className="hover:text-primary transition-all">TERMINAL</a>
-            <a href="#" className="hover:text-secondary transition-all">PRIVACY</a>
-            <a href="#" className="hover:text-accent transition-all">SHELL</a>
-          </div>
+        </div>
+        <div className="w-full overflow-hidden">
+          <h1 className="text-[13vw] leading-[0.8] font-black text-black text-center tracking-tighter select-none -mb-1 md:-mb-3">
+            RUPEE ROAS
+            <span className="text-transparent bg-clip-text bg-[linear-gradient(to_bottom,transparent_40%,black_80%),linear-gradient(180deg,#EA580C_0%,#DC2626_30%,#000000_60%,#EA580C_100%)] bg-[length:100%_100%,100%_200%] animate-lava-slow drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]">
+              T
+            </span>
+          </h1>
         </div>
       </footer>
     </main>

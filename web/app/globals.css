@@ -227,3 +227,20 @@
   border: 3px solid #000;
   box-shadow: var(--shadow-brutalist-sm);
 }
+
+@layer utilities {
+  @keyframes lava-flow {
+    0% {
+      background-position: 50% 0%;
+    }
+
+    100% {
+      background-position: 50% 200%;
+    }
+  }
+
+  .animate-lava {
+    background-size: 100% 200%;
+    animation: lava-flow 2s linear infinite;
+  }
+}
