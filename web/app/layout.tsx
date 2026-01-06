@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Outfit, Fraunces } from "next/font/google";
+import { Space_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
   subsets: ["latin"],
+  variable: "--font-space-mono",
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const pressStart2P = Press_Start_2P({
+  weight: "400",
   subsets: ["latin"],
-  style: "italic",
+  variable: "--font-press-start",
 });
 
 export const metadata: Metadata = {
-  title: "Delulu | Financial Reality Journal",
-  description: "A gentle, paper-thin journal of your financial indiscretions.",
+  title: "RUPEE ROAST | Financial Reality Check",
+  description: "AI-powered spending analysis that doesn't sugarcoat your habits.",
 };
 
 export default function RootLayout({
@@ -25,9 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${outfit.variable} ${fraunces.variable} antialiased`}
-      >
+      <body className={`${spaceMono.variable} ${pressStart2P.variable} antialiased`}>
         {children}
       </body>
     </html>

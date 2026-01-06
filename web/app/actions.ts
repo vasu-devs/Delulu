@@ -1,7 +1,6 @@
 "use server";
 
 import { extractTransactions, generateSavageRoast } from "@/lib/groq";
-import { AnalysisResult } from "@/types";
 
 const API_KEY = process.env.GROQ_API_KEY;
 
@@ -14,8 +13,8 @@ export async function processFinancialDataAction(text: string) {
         const analysis = await extractTransactions(API_KEY, text);
         const roast = await generateSavageRoast(API_KEY, analysis.transactions, analysis.financial_health_score);
         return { analysis, roast };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error in server action:", error);
-        throw new Error(error.message || "Failed to process financial data.");
+        throw new Error(error instanceof Error ? error.message : "Failed to process financial data.");
     }
 }

@@ -61,7 +61,7 @@ export async function extractTransactions(apiKey: string, cleanText: string): Pr
     return JSON.parse(content);
 }
 
-export async function generateSavageRoast(apiKey: string, transactions: any[], score: number): Promise<string> {
+export async function generateSavageRoast(apiKey: string, transactions: { merchant: string }[], score: number): Promise<string> {
     const groq = getGroqClient(apiKey);
 
     const completion = await groq.chat.completions.create({
@@ -105,8 +105,8 @@ export function calculateWealthProjection(impulsiveTotal: number) {
 
         data.push({
             year: `Year ${t}`,
-            wasted: Math.round(wastedValue),
-            invested: Math.round(investedValue),
+            lost: Math.round(wastedValue),
+            value: Math.round(investedValue),
         });
     }
     return data;

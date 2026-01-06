@@ -1,48 +1,61 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Terminal, ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Terminal, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface DebugPanelProps {
-    raw: string;
-    cleaned: string;
+    raw: unknown;
+    cleaned: unknown;
 }
 
 export default function DebugPanel({ raw, cleaned }: DebugPanelProps) {
     const [isOpen, setIsOpen] = useState(false);
 
+    const formatData = (data: unknown) => {
+        if (typeof data === 'string') return data;
+        if (!data) return "No data";
+        return JSON.stringify(data, null, 2);
+    };
+
     return (
-        <div className="mt-12">
+        <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 text-slate-300 hover:text-slate-500 transition-colors mx-auto uppercase text-[10px] font-black tracking-widest bg-white px-6 py-3 rounded-full border border-slate-100 shadow-sm"
+                className="w-full px-5 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors"
             >
-                <Terminal className="w-3 h-3" />
-                {isOpen ? "Stow Sensitive Data" : "Inspect Raw Records"}
-                {isOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                <div className="flex items-center gap-3">
+                    <Terminal className="w-4 h-4 text-zinc-400" />
+                    <span className="text-sm font-medium text-zinc-700">Debug Panel</span>
+                </div>
+                <ChevronDown className={`w-4 h-4 text-zinc-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {isOpen && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 overflow-hidden"
-                >
-                    <div className="space-y-3">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Original Transmission</h4>
-                        <pre className="bg-slate-50 p-8 rounded-[2rem] text-[10px] font-medium text-slate-400 overflow-auto max-h-[400px] border border-slate-100 custom-scrollbar leading-relaxed">
-                            {raw}
-                        </pre>
-                    </div>
-                    <div className="space-y-3">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-4">Sanitized Records</h4>
-                        <pre className="bg-white p-8 rounded-[2rem] text-[10px] font-medium text-indigo-600/60 overflow-auto max-h-[400px] border border-slate-100 shadow-inner custom-scrollbar leading-relaxed">
-                            {cleaned}
-                        </pre>
-                    </div>
-                </motion.div>
-            )}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <div className="border-t border-zinc-100 grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
+                            <div>
+                                <h4 className="text-xs font-medium text-zinc-400 mb-2">Raw Input</h4>
+                                <pre className="bg-zinc-50 p-3 rounded-lg text-xs text-zinc-500 overflow-auto max-h-[250px] border border-zinc-100">
+                                    {formatData(raw)}
+                                </pre>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-medium text-emerald-500 mb-2">Cleaned Output</h4>
+                                <pre className="bg-emerald-50 p-3 rounded-lg text-xs text-emerald-600 overflow-auto max-h-[250px] border border-emerald-100">
+                                    {formatData(cleaned)}
+                                </pre>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

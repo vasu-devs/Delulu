@@ -1,0 +1,26 @@
+[0m[0m
+[0m[4mE:\Recruitment\Finanjo\web\app\actions.ts[24m[0m
+[0m   [2m4:10[22m  [33mwarning[39m  'AnalysisResult' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m17:21[22m  [31merror[39m    Unexpected any. Specify a different type    [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mE:\Recruitment\Finanjo\web\app\page.tsx[24m[0m
+[0m   [2m29:48[22m  [31merror[39m  Unexpected any. Specify a different type                         [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m59:21[22m  [31merror[39m  Unexpected any. Specify a different type                         [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m60:34[22m  [31merror[39m  Unexpected any. Specify a different type                         [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m65:19[22m  [31merror[39m  Unexpected any. Specify a different type                         [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m103:52[22m  [31merror[39m  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  [2mreact/no-unescaped-entities[22m[0m
+[0m[0m
+[0m[4mE:\Recruitment\Finanjo\web\components\SummaryCards.tsx[24m[0m
+[0m  [2m5:11[22m  [33mwarning[39m  'impulsiveCount' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Recruitment\Finanjo\web\components\WealthChart.tsx[24m[0m
+[0m  [2m6:11[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mE:\Recruitment\Finanjo\web\lib\groq.ts[24m[0m
+[0m  [2m64:73[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mE:\Recruitment\Finanjo\web\lib\pdf-parser.ts[24m[0m
+[0m  [2m21:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[31m[1m✖ 11 problems (9 errors, 2 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m

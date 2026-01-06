@@ -1,7 +1,8 @@
 export interface Transaction {
   merchant: string;
   amount: number;
-  category: "Food" | "Travel" | "Shopping" | "Bills" | "UPI-Transfer" | "Vice" | "Other";
+  transaction_type: "DEBIT" | "CREDIT";
+  category: "Food" | "Travel" | "Shopping" | "Bills" | "Utilities" | "Subscription" | "UPI-Transfer" | "Vice" | "Income" | "Cashback" | "Verification" | "Other";
   is_impulsive: boolean;
   original_text: string;
 }

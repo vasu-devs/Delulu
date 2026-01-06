@@ -4,6 +4,7 @@ from typing import List, Optional
 class Transaction(BaseModel):
     merchant: str
     amount: float
+    transaction_type: str
     category: str
     is_impulsive: bool
     original_text: str

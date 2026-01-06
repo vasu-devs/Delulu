@@ -2,7 +2,6 @@ import { AnalysisResult } from "../types";
 
 export default function SummaryCards({ analysis }: { analysis: AnalysisResult }) {
     const totalSpent = analysis.transactions.reduce((acc, t) => acc + t.amount, 0);
-    const impulsiveCount = analysis.transactions.filter(t => t.is_impulsive).length;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

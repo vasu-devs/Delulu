@@ -1,25 +1,229 @@
 @import "tailwindcss";
 
-:root {
-  --background: #FDFCFB;
-  --foreground: #1E293B;
+@theme {
+  --color-background: #111122;
+  --color-foreground: #FFFFFF;
+  --color-primary: #D4FF00;
+  /* High-Volt Lime */
+  --color-secondary: #FF00FF;
+  /* Electric Pink */
+  --color-accent: #FFD700;
+  /* Sunshine Yellow */
+  --color-indigo-dark: #0A0A1A;
+  --color-muted-foreground: rgba(255, 255, 255, 0.7);
+
+  /* Tighter Shadows for Premium Feel */
+  --shadow-brutalist-sm: 2px 2px 0px 0px #000000;
+  --shadow-brutalist: 4px 4px 0px 0px #000000;
+  --shadow-brutalist-lg: 8px 8px 0px 0px #000000;
+  --shadow-brutalist-active: 1px 1px 0px 0px #000000;
+  --shadow-neon-lime: 0 0 10px rgba(212, 255, 0, 0.3);
+  --shadow-neon-pink: 0 0 10px rgba(255, 0, 255, 0.3);
+
+  --font-arcade: var(--font-press-start), system-ui;
+  --font-mono: var(--font-space-mono), monospace;
+  --color-white: #FFFFFF;
+  --color-off-white: #FAFAFA;
+  /* Zinc-50 */
+  --color-black: #000000;
+  --radius-none: 0px;
+  --radius-sm: 4px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --font-sans: var(--font-mono);
+}
+
+@layer base {
+  * {
+    border-color: #000000;
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 2V4H4V18H6V20H8V22H14V20H16V18H18V16H20V12H18V10H16V8H14V6H12V4H10V2H6Z' fill='white'/%3E%3Cpath d='M8 4V6H6V18H8V20H12V18H14V16H16V12H14V10H12V8H10V6H8V4Z' fill='black'/%3E%3C/svg%3E"), auto;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(212, 255, 0, 0.03) 0%, transparent 60%),
+      radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.03) 0%, transparent 60%),
+      linear-gradient(rgba(17, 17, 34, 0.98) 0%, rgba(17, 17, 34, 0.98) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  .arcade-font {
+    font-family: var(--font-arcade);
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    filter: drop-shadow(1px 1px 0px #000);
+    /* Reduced shadow clutter */
   }
 }
 
-body {
-  font-family: var(--font-outfit), sans-serif;
-  background: var(--background);
-  color: var(--foreground);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+@layer utilities {
+  .brutalist-card {
+    border: 2px solid #000;
+    background-color: var(--color-off-white);
+    color: #000;
+    box-shadow: var(--shadow-brutalist);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .brutalist-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-brutalist-lg);
+  }
+
+  .brutalist-card:active {
+    box-shadow: var(--shadow-brutalist-active);
+    transform: translate(2px, 2px);
+  }
+
+  .arcade-btn {
+    border: 2px solid #000;
+    background-color: var(--color-primary);
+    color: #000;
+    box-shadow: var(--shadow-brutalist);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-mono);
+    /* Switched to readable font */
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+  }
+
+  .arcade-btn:hover {
+    background-color: #FFF;
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-brutalist-lg);
+  }
+
+  .indigo-card {
+    background-color: var(--color-indigo-dark);
+    color: #FFF;
+    border: 2px solid #FFF;
+    box-shadow: var(--shadow-neon-pink);
+  }
+
+  .pink-card {
+    background-color: var(--color-secondary);
+    color: #FFF;
+    border: 2px solid #000;
+    box-shadow: var(--shadow-brutalist);
+  }
+
+  .lime-card {
+    background-color: var(--color-primary);
+    color: #000;
+    border: 2px solid #000;
+    box-shadow: var(--shadow-brutalist);
+    transition: all 0.2s ease;
+  }
+
+  .lime-card:hover {
+    box-shadow: var(--shadow-brutalist-lg);
+  }
+
+  .yellow-card {
+    background-color: var(--color-accent);
+    color: #000;
+    border: 2px solid #000;
+    box-shadow: var(--shadow-brutalist);
+  }
+
+  .crt-overlay {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+
+  .crt-overlay::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    z-index: 2;
+    background-size: 100% 3px, 6px 100%;
+    pointer-events: none;
+  }
+
+  .crt-overlay::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(18, 16, 16, 0.05);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: flicker 0.1s infinite;
+  }
+
+  @keyframes flicker {
+    0% {
+      opacity: 0.1;
+    }
+
+    50% {
+      opacity: 0.25;
+    }
+
+    100% {
+      opacity: 0.1;
+    }
+  }
+
+  .grid-lines {
+    background-size: 50px 50px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .comic-bubble {
+    position: relative;
+    border: 2px solid #000;
+    background-color: var(--color-accent);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-brutalist);
+    clip-path: polygon(0% 10%, 10% 10%, 10% 0%, 90% 0%, 90% 10%, 100% 10%, 100% 70%, 90% 70%, 90% 80%, 50% 80%, 45% 100%, 35% 80%, 10% 80%, 10% 70%, 0% 70%);
+  }
+
+  .receipt-edge {
+    background-image: radial-gradient(circle at 10px -5px, transparent 12px, white 13px);
+    background-size: 20px 20px;
+  }
 }
 
-.font-serif {
-  font-family: var(--font-fraunces), serif;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 14px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: var(--color-indigo-dark);
+  border-left: 3px solid #000;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+  border: 3px solid #000;
+  box-shadow: var(--shadow-brutalist-sm);
 }

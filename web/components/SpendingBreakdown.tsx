@@ -1,140 +1,187 @@
 "use client";
 
 import { AnalysisResult, Transaction } from "../types";
-import { Utensils, CreditCard, ShoppingBag, Zap, MoreHorizontal, IndianRupee, Ghost, Flame, ListFilter, ArrowDownRight } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+    MoreHorizontal, ListFilter,
+    ChevronDown, ArrowDownLeft, Trash2, Rocket
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import Image from "next/image";
 
 interface SpendingBreakdownProps {
     analysis: AnalysisResult;
 }
 
-export default function SpendingBreakdown({ analysis }: SpendingBreakdownProps) {
-    const categories = {
-        Food: { icon: Utensils, color: "text-emerald-500", bg: "bg-[#F0FDF4]", border: "border-emerald-100", label: "Mint Nutrition" },
-        Subscription: { icon: CreditCard, color: "text-indigo-500", bg: "bg-[#F5F3FF]", border: "border-indigo-100", label: "Lavender Access" },
-        Shopping: { icon: ShoppingBag, color: "text-rose-500", bg: "bg-[#FFF1F2]", border: "border-rose-100", label: "Rose Desires" },
-        Bills: { icon: Zap, color: "text-amber-500", bg: "bg-[#FEFCE8]", border: "border-amber-100", label: "Lemon Utility" },
-        Travel: { icon: Ghost, color: "text-sky-500", bg: "bg-[#F0F9FF]", border: "border-sky-100", label: "Sky Escape" },
-        Vice: { icon: Flame, color: "text-orange-500", bg: "bg-[#FFF7ED]", border: "border-orange-100", label: "Peach Chaos" },
-        Other: { icon: MoreHorizontal, color: "text-slate-500", bg: "bg-[#F8FAFC]", border: "border-slate-200", label: "Grey Area" },
-    };
+const CATEGORY_ASSETS: Record<string, string> = {
+    Food: "/assets/rupee-roast/dumpster_fire.png", // Creative roast: Spicy food / Burned money
+    Travel: "/assets/rupee-roast/rocket.png",
+    Shopping: "/assets/rupee-roast/sticker_crying_wallet.png",
+    Other: "/assets/rupee-roast/logo.png", // Fallback to Piggy
+};
 
-    const grouped = analysis.transactions.reduce((acc, t) => {
-        const cat = t.category as keyof typeof categories;
+export default function SpendingBreakdown({ analysis }: SpendingBreakdownProps) {
+    const [showAllTransactions, setShowAllTransactions] = useState(false);
+
+    const debits = analysis.transactions.filter(t => t.transaction_type === "DEBIT");
+    const credits = analysis.transactions.filter(t => t.transaction_type === "CREDIT");
+
+    const totalSpent = debits.reduce((sum, t) => sum + (t.amount || 0), 0);
+    const totalReceived = credits.reduce((sum, t) => sum + (t.amount || 0), 0);
+
+    const grouped = debits.reduce((acc, t) => {
+        const cat = t.category;
         if (!acc[cat]) acc[cat] = { transactions: [], total: 0 };
         acc[cat].transactions.push(t);
-        acc[cat].total += t.amount;
+        acc[cat].total += (t.amount || 0);
         return acc;
     }, {} as Record<string, { transactions: Transaction[]; total: number }>);
 
+    const sortedCategories = Object.entries(grouped).sort((a, b) => b[1].total - a[1].total);
+
     return (
-        <div className="space-y-20 mt-24">
-            {/* Stationery Grid */}
-            <div>
-                <div className="flex items-center gap-4 mb-12 px-2">
-                    <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
-                        <ListFilter className="w-6 h-6 text-indigo-300" />
-                    </div>
+        <div className="space-y-12">
+            {/* Summary Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="md:col-span-2 brutalist-card p-8 flex flex-col justify-between border-2 shadow-brutalist bg-white">
                     <div>
-                        <h3 className="text-2xl font-black uppercase tracking-tighter text-slate-900 leading-tight">Post-it Inventory</h3>
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">Categorized indescressions</p>
+                        <span className="font-mono font-bold text-[10px] block mb-4 text-black/40 tracking-widest uppercase">Total Damage</span>
+                        <div className="flex items-baseline gap-4 tabular font-black text-5xl md:text-6xl text-black tracking-tight">
+                            <span>₹{totalSpent.toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div className="mt-8">
+                        <p className="font-mono font-bold text-[9px] text-black/30 mb-2 uppercase tracking-widest">Chaos Level</p>
+                        <div className="h-4 w-full bg-black/5 border border-black rounded-none overflow-hidden p-0.5">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: "92%" }}
+                                className="h-full bg-black shadow-[0_0_10px_rgba(0,0,0,0.5)] flex items-center justify-end px-2"
+                            >
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {Object.entries(categories).map(([name, config], index) => {
-                        const group = grouped[name] || { transactions: [], total: 0 };
-                        if (group.transactions.length === 0 && name !== "Food") return null;
+                <div className="pink-card p-6 flex flex-col justify-between border-2 shadow-brutalist">
+                    <span className="font-mono font-bold text-[10px] block mb-4 tracking-widest uppercase opacity-80">Inflow (Lucky)</span>
+                    <p className="text-3xl font-black tabular">₹{totalReceived.toLocaleString()}</p>
+                    <div className="mt-4 flex items-center gap-2">
+                        <ArrowDownLeft className="w-4 h-4" />
+                        <span className="font-mono font-bold text-[9px] uppercase">Bailout</span>
+                    </div>
+                </div>
 
-                        const Icon = config.icon;
+                <div className="indigo-card !bg-black p-6 flex flex-col justify-between border-2 border-primary shadow-neon-lime">
+                    <span className="font-mono font-bold text-[10px] block mb-4 text-primary tracking-widest uppercase opacity-80">Session Logs</span>
+                    <p className="text-4xl font-black tabular text-primary">{analysis.transactions.length}</p>
+                    <p className="font-mono font-bold text-[9px] text-primary/40 uppercase mt-2">Entries Audited</p>
+                </div>
+            </div>
 
+            {/* Category HUD */}
+            {sortedCategories.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {sortedCategories.slice(0, 3).map(([name, group], idx) => {
+                        const iconPath = CATEGORY_ASSETS[name] || CATEGORY_ASSETS.Other;
                         return (
                             <motion.div
                                 key={name}
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                className={`${config.bg} border-2 ${config.border} rounded-[3.5rem] p-10 group hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-700 relative overflow-hidden`}
+                                whileHover={{ y: -4, scale: 1.01 }}
+                                className="brutalist-card bg-zinc-50 p-6 flex border-2 shadow-brutalist relative overflow-hidden group"
                             >
-                                <div className="flex justify-between items-start mb-8">
-                                    <div className={`bg-white p-4 rounded-2xl shadow-sm border ${config.border} group-hover:rotate-12 transition-transform`}>
-                                        <Icon className={`w-7 h-7 ${config.color}`} />
+                                <div className="flex-1 relative z-10">
+                                    <div className="w-12 h-12 mb-6 opacity-80 grayscale group-hover:grayscale-0 transition-all">
+                                        <Image
+                                            src={iconPath}
+                                            alt={name}
+                                            width={48}
+                                            height={48}
+                                            className="w-full h-full object-contain pixel-antialiased"
+                                        />
                                     </div>
-                                    <div className="bg-white/60 backdrop-blur-sm px-5 py-2 rounded-full border border-white text-[10px] font-black uppercase tracking-widest text-slate-500 shadow-sm">
-                                        {group.transactions.length} Hits
-                                    </div>
+                                    <h4 className="font-mono font-bold text-[10px] text-black/40 mb-2 uppercase tracking-widest">{name}</h4>
+                                    <p className="text-2xl font-black tabular">₹{group.total.toLocaleString()}</p>
                                 </div>
-
-                                <h4 className={`text-[10px] font-black uppercase tracking-[0.3em] mb-2 ${config.color} opacity-60`}>{config.label}</h4>
-                                <div className="text-4xl font-black text-slate-900 flex items-baseline gap-2 mb-8">
-                                    <span className="text-slate-200 text-xl font-bold">₹</span>
-                                    {group.total.toLocaleString()}
-                                </div>
-
-                                <div className="space-y-4 max-h-[180px] overflow-y-auto pr-3 custom-scrollbar">
-                                    {group.transactions.map((t, i) => (
-                                        <div key={i} className="flex justify-between items-center text-[11px] border-b border-black/5 pb-4 last:border-0 hover:bg-white/40 rounded-xl px-3 -mx-3 transition-colors">
-                                            <span className="text-slate-600 font-bold truncate max-w-[140px] uppercase tracking-tight">{t.merchant}</span>
-                                            <span className="text-slate-900 font-black tabular-nums">₹{t.amount.toLocaleString()}</span>
-                                        </div>
-                                    ))}
+                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                    <span className="font-arcade text-4xl text-black">#{idx + 1}</span>
                                 </div>
                             </motion.div>
                         );
                     })}
                 </div>
-            </div>
+            )}
 
-            {/* The Daily Journal Table */}
-            <div className="bg-white border border-slate-100 rounded-[5rem] p-10 md:p-20 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.04)]">
-                <div className="flex flex-col md:flex-row items-center justify-between mb-20 gap-10">
-                    <div className="flex items-center gap-5">
-                        <div className="bg-slate-900 p-4 rounded-[1.5rem] shadow-2xl rotate-3">
-                            <ArrowDownRight className="w-8 h-8 text-white" />
+            {/* Receipt of Shame */}
+            <div className="bg-white brutalist-card !p-0 overflow-hidden border-2 shadow-brutalist">
+                <div className="p-8 border-b-2 border-black bg-white flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                        <div className="w-12 h-12 bg-black text-white flex items-center justify-center border-2 border-black shadow-sm">
+                            <ListFilter className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                            <h3 className="text-3xl font-black uppercase tracking-tighter text-slate-900 leading-none mb-1">Stationery Journal</h3>
-                            <p className="text-slate-300 text-[10px] font-black uppercase tracking-[0.6em]">The unedited manuscript</p>
+                            <h3 className="font-arcade text-sm tracking-tight mb-1">RECEIPT OF SHAME</h3>
+                            <span className="font-mono font-bold text-[9px] text-black/40 uppercase tracking-widest">Date: {new Date().toLocaleDateString()} {"// P-885"}</span>
                         </div>
-                    </div>
-                    <div className="bg-[#FAF9F6] px-10 py-6 rounded-[2.5rem] border border-slate-100 inline-flex items-center shadow-inner">
-                        <span className="text-5xl font-black text-slate-900 tracking-tighter leading-none">{analysis.transactions.length}</span>
-                        <span className="text-slate-300 text-[10px] font-black uppercase ml-5 tracking-[0.4em]">Indexed Logs</span>
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-separate border-spacing-y-5">
-                        <thead>
-                            <tr className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300">
-                                <th className="px-10 pb-5">Memo Details</th>
-                                <th className="px-10 pb-5">Tag</th>
-                                <th className="px-10 pb-5 text-right">Debit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {analysis.transactions.map((t, i) => (
-                                <tr key={i} className="group transition-all hover:scale-[1.01]">
-                                    <td className="bg-[#FAF9F6]/80 backdrop-blur-sm px-10 py-8 rounded-l-[2rem] border-2 border-slate-50 border-r-0 shadow-sm">
-                                        <span className="text-slate-900 font-black text-lg block mb-1 uppercase tracking-tight">{t.merchant}</span>
-                                        <span className="text-slate-400 text-[11px] font-bold block truncate max-w-[380px] italic">"{t.original_text}"</span>
-                                    </td>
-                                    <td className="bg-[#FAF9F6]/80 backdrop-blur-sm px-10 py-8 border-2 border-slate-50 border-x-0 shadow-sm text-center">
-                                        <span className={`px-5 py-2 rounded-full text-[10px] font-black border-2 uppercase tracking-[0.2em] shadow-sm ${t.category === 'Vice' ? 'bg-orange-50 text-orange-400 border-orange-100' :
-                                                t.category === 'Food' ? 'bg-emerald-50 text-emerald-400 border-emerald-100' :
-                                                    t.category === 'Shopping' ? 'bg-rose-50 text-rose-400 border-rose-100' :
-                                                        'bg-indigo-50 text-indigo-400 border-indigo-100'
-                                            }`}>
-                                            {t.category}
-                                        </span>
-                                    </td>
-                                    <td className="bg-[#FAF9F6]/80 backdrop-blur-sm px-10 py-8 rounded-r-[2rem] border-2 border-slate-50 border-l-0 text-right shadow-sm">
-                                        <span className="text-slate-950 font-black tabular-nums text-xl">₹{t.amount.toLocaleString()}</span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="receipt-edge h-4 w-full opacity-10" />
+
+                <div className="p-6 space-y-2 relative bg-white">
+                    <div className="absolute inset-0 pointer-events-none opacity-5 bg-white" />
+
+                    {analysis.transactions.map((t, i) => {
+                        const iconPath = CATEGORY_ASSETS[t.category] || CATEGORY_ASSETS.Other;
+                        const isCredit = t.transaction_type === "CREDIT";
+
+                        return (
+                            <div key={i} className="group/row relative">
+                                <motion.div
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.02 }}
+                                    className="flex items-center justify-between p-4 border-b border-dashed border-black/10 hover:bg-zinc-50 transition-colors cursor-help"
+                                >
+                                    <div className="flex items-center gap-6">
+                                        <div className={`w-10 h-10 border-2 border-black flex items-center justify-center transition-colors ${isCredit ? 'bg-primary' : 'bg-white group-hover/row:bg-white'}`}>
+                                            <Image
+                                                src={iconPath}
+                                                alt={t.category}
+                                                width={24}
+                                                height={24}
+                                                className="w-6 h-6 pixel-antialiased"
+                                            />
+                                        </div>
+                                        <div>
+                                            <p className="font-mono font-bold text-sm tracking-tight text-black">{t.merchant.toUpperCase()}</p>
+                                            <div className="flex items-center gap-3 mt-1">
+                                                <span className="font-mono font-bold text-[9px] text-black/40 tracking-widest uppercase">{t.category}</span>
+                                                <span className={`font-mono font-bold text-[9px] uppercase ${isCredit ? 'text-green-600' : 'text-secondary'}`}>[{t.transaction_type}]</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className={`text-lg font-bold tabular ${isCredit ? 'text-green-600' : 'text-black'}`}>
+                                            {isCredit ? '+' : '-'}₹{t.amount?.toLocaleString()}
+                                        </p>
+                                        {t.is_impulsive && (
+                                            <span className="font-mono font-bold text-[8px] bg-red-100 text-red-600 px-2 py-0.5 mt-1 inline-block rounded-sm">IMPULSIVE</span>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="receipt-edge h-4 w-full opacity-10 rotate-180" />
+
+                <div className="p-8 bg-zinc-50 border-t-2 border-black text-center">
+                    <p className="font-mono font-bold text-[10px] mb-4 text-black/30 uppercase tracking-[0.2em]">End of Transcript</p>
+                    <div className="h-10 bg-black flex items-center justify-center border-2 shadow-brutalist mx-auto max-w-xs">
+                        <p className="font-arcade text-white text-[10px] tracking-[0.2em] uppercase">Regret: ₹{Math.round(totalSpent * 0.3).toLocaleString()}</p>
+                    </div>
                 </div>
             </div>
         </div>
