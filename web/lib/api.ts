@@ -1,19 +1,20 @@
 /**
- * Production-grade API Client for Delulu
- * Connects to the FastAPI backend
+ * API Client - supports both file and text
  */
 
 const API_BASE = "/api/v1";
 
-export async function analyzeStatementAPI(text: string) {
-    const formData = new URLSearchParams();
-    formData.append("text", text);
+export async function analyzeStatementAPI(input: string | File) {
+    const formData = new FormData();
+
+    if (input instanceof File) {
+        formData.append("file", input);
+    } else {
+        formData.append("text", input);
+    }
 
     const response = await fetch(`${API_BASE}/analyze`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
         body: formData,
     });
 

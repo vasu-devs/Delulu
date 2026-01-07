@@ -13,8 +13,10 @@ import { AnalysisResult, Transaction } from "@/types";
 
 import FileUpload from "@/components/FileUpload";
 import WealthChart from "@/components/WealthChart";
+import CategoryPieChart from "@/components/CategoryPieChart";
 import DebugPanel from "@/components/DebugPanel";
 import SpendingBreakdown from "@/components/SpendingBreakdown";
+import RoastCard from "@/components/RoastCard";
 
 import { analyzeStatementAPI } from "@/lib/api";
 
@@ -47,13 +49,11 @@ export default function Dashboard() {
     setError(null);
     try {
       let data;
+
       if (activeTab === "pdf") {
         if (!file) throw new Error("Please select a statement first.");
-        const text = await extractTextFromPDF(file);
-        if (!text || text.trim().length < 50) {
-          throw new Error("Could not extract enough text from PDF.");
-        }
-        data = await analyzeStatementAPI(text);
+        // Send PDF to backend - Docling will convert to markdown
+        data = await analyzeStatementAPI(file);
       } else {
         if (!rawText.trim()) throw new Error("Please paste some transactions first.");
         data = await analyzeStatementAPI(rawText);
@@ -61,7 +61,7 @@ export default function Dashboard() {
 
       setAnalysis(data.analysis);
       setRoast(data.roast);
-      setRawDump(data.raw_data || "No raw signal captured.");
+      setRawDump(data.raw_chars || "N/A");
       setCleanedDump(data.analysis);
 
       // Regret Calculation: 1.3x multiplier for invested fantasy
@@ -309,56 +309,40 @@ export default function Dashboard() {
 
             {/* 1. VERDICT HERO */}
             <section className="relative">
-              <motion.div
-                initial={{ scale: 0.98, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="indigo-card !bg-black p-8 md:p-12 overflow-hidden crt-overlay border-2 shadow-brutalist"
-              >
-                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                  <div className="lg:col-span-12 mb-8 text-center md:text-left">
-                    <div className="flex items-center justify-center md:justify-start gap-4 mb-6">
-                      <div className="w-3 h-3 rounded-full bg-primary animate-ping" />
-                      <span className="font-mono font-bold text-xs text-primary/80 tracking-widest uppercase">Analysis Complete</span>
-                    </div>
-                    <h2 className="text-4xl md:text-7xl text-white font-arcade leading-tight tracking-tighter mix-blend-screen">
-                      VERDICT: <span className="text-secondary drop-shadow-[2px_2px_0px_#000]">FATAL</span>
-                    </h2>
-                  </div>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <div className="lg:col-span-9">
+                  <RoastCard roast={roast} />
+                </div>
 
-                  <div className="lg:col-span-8 relative">
-                    <div className="comic-bubble text-black font-mono font-bold text-xl leading-relaxed p-10 mt-8 mb-12 shadow-brutalist border-2 bg-white">
-                      <div className="absolute -top-12 -right-12 hidden md:block">
-                        <Image
-                          src="/assets/rupee-roast/sticker_crying_wallet.png"
-                          alt="Crying Wallet"
-                          width={140}
-                          height={140}
-                          className="w-36 h-36 rotate-12 drop-shadow-xl"
-                        />
-                      </div>
-                      {roast}
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-4 flex justify-center">
-                    <motion.div
-                      animate={{ rotate: [2, -2, 2] }}
-                      transition={{ duration: 5, repeat: Infinity }}
-                      className="yellow-card p-10 rotate-2 shadow-brutalist border-2 bg-accent text-black text-center w-full max-w-sm"
-                    >
-                      <p className="font-mono font-bold text-xs uppercase tracking-widest mb-6 border-b-2 border-black pb-2 mx-auto w-1/2">Shame Score</p>
-                      <p className="text-8xl font-black tabular leading-none">
+                <div className="lg:col-span-3 flex flex-col gap-8">
+                  <motion.div
+                    initial={{ scale: 0.98, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="yellow-card !bg-[#FEFCE8] p-8 h-full flex flex-col items-center justify-center border-2 border-black shadow-brutalist text-center"
+                  >
+                    <p className="font-mono font-black text-[10px] uppercase tracking-[0.2em] mb-4 text-black/40">Financial Integrity</p>
+                    <div className="relative">
+                      <p className="text-7xl lg:text-8xl font-black text-black leading-none mb-2">
                         {analysis.financial_health_score}
                       </p>
-                    </motion.div>
-                  </div>
+                      <span className="absolute -right-6 top-0 font-arcade text-lg text-primary">/100</span>
+                    </div>
+                    <p className="font-arcade text-xs text-black mt-4">SHAME SCORE</p>
+                    <div className="w-full h-2 bg-black/10 mt-8 relative overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${analysis.financial_health_score}%` }}
+                        className="absolute inset-y-0 left-0 bg-secondary"
+                      />
+                    </div>
+                  </motion.div>
                 </div>
-              </motion.div>
+              </div>
             </section>
 
             {/* 2. REGRET ENGINE */}
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-black shadow-brutalist overflow-hidden group bg-black">
-              <div className="bg-[#050510] p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-black relative overflow-hidden">
+              <div className="bg-white p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-black relative overflow-hidden text-black">
                 <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none group-hover:scale-110 transition-transform duration-700">
                   <Image
                     src="/assets/rupee-roast/dumpster_fire.png"
@@ -369,10 +353,10 @@ export default function Dashboard() {
                   />
                 </div>
                 <div className="relative z-10 space-y-8">
-                  <h3 className="font-arcade text-secondary text-2xl drop-shadow-[2px_2px_0px_#000]">THE REALITY<br /><span className="text-white/60 font-mono font-normal text-xs uppercase tracking-widest">(Capital Burned)</span></h3>
+                  <h3 className="font-arcade text-secondary text-2xl drop-shadow-[2px_2px_0px_#000]">THE REALITY<br /><span className="text-black/60 font-mono font-normal text-xs uppercase tracking-widest">(Capital Burned)</span></h3>
                   <div className="space-y-2">
-                    <p className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Burn Status: CRITICAL</p>
-                    <p className="text-6xl md:text-7xl font-black text-white tabular drop-shadow-lg">₹{balance.toLocaleString()}</p>
+                    <p className="text-[10px] font-mono font-bold text-black/40 uppercase tracking-widest">Burn Status: CRITICAL</p>
+                    <p className="text-6xl md:text-7xl font-black text-black tabular">₹{balance.toLocaleString()}</p>
                   </div>
                   <div className="pink-card !p-6 font-mono font-bold text-lg border-2 shadow-brutalist inline-block transform -rotate-1">
                     &quot;MOSTLY SPENT ON: VIBES.&quot;
@@ -417,16 +401,60 @@ export default function Dashboard() {
               </div>
 
               {/* Right: Charts & Debug */}
-              <div className="lg:col-span-5 space-y-12">
-                <div className="brutalist-card p-8 md:p-10 bg-white border-2 shadow-brutalist relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
-                    <TrendingUp className="w-64 h-64 text-black" />
+
+              <div className="lg:col-span-5 space-y-8">
+                {/* 1. Category Distribution (Pie) */}
+                <div className="brutalist-card p-8 bg-white border-2 shadow-brutalist relative overflow-hidden">
+                  <div className="mb-6 relative z-10 border-b-2 border-black pb-4">
+                    <h4 className="font-arcade text-lg mb-1 text-black tracking-tight">SPENDING PIE</h4>
+                    <p className="font-mono text-[10px] text-black/40 font-bold uppercase tracking-widest">Where the money went</p>
                   </div>
-                  <div className="mb-10 relative z-10 border-b-2 border-black pb-6">
-                    <h4 className="font-arcade text-lg mb-2 text-black tracking-tight">WEALTH TRAJECTORY</h4>
-                    <p className="font-mono text-xs text-black/60 font-bold uppercase tracking-widest">FORENSIC PROJECTION</p>
+                  <div className="h-[250px] relative z-10 -ml-4">
+                    <CategoryPieChart data={Object.entries(analysis.transactions.reduce((acc: any, t: any) => {
+                      if (t.transaction_type === 'DEBIT') {
+                        acc[t.category] = (acc[t.category] || 0) + t.amount;
+                      }
+                      return acc;
+                    }, {})).map(([name, value]: any) => ({ name, value })).sort((a: any, b: any) => b.value - a.value)} />
                   </div>
-                  <div className="h-[350px] relative z-10">
+                </div>
+
+                {/* 2. Quick Stats Grid */}
+                {/* 2. Quick Stats Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-zinc-50 p-4 border-2 border-black shadow-sm">
+                    <p className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest mb-1">Total Burned</p>
+                    <p className="font-black text-xl lg:text-2xl tabular-nums text-black">
+                      ₹{Math.round(analysis.transactions.reduce((acc: number, t: any) => t.transaction_type === 'DEBIT' ? acc + t.amount : acc, 0)).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="bg-zinc-50 p-4 border-2 border-black shadow-sm">
+                    <p className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest mb-1">Avg Ticket</p>
+                    <p className="font-black text-xl lg:text-2xl tabular-nums text-black">
+                      ₹{Math.round((analysis.transactions.reduce((acc: number, t: any) => t.transaction_type === 'DEBIT' ? acc + t.amount : acc, 0)) / (analysis.transactions.filter((t: any) => t.transaction_type === "DEBIT").length || 1)).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="bg-zinc-50 p-4 border-2 border-black shadow-sm">
+                    <p className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest mb-1">Big Burn</p>
+                    <p className="font-black text-xl lg:text-2xl tabular-nums text-red-600">
+                      ₹{Math.max(...analysis.transactions.filter((t: any) => t.transaction_type === "DEBIT").map((t: any) => t.amount), 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="bg-zinc-50 p-4 border-2 border-black shadow-sm">
+                    <p className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest mb-1">Total Txns</p>
+                    <p className="font-black text-xl lg:text-2xl tabular-nums text-black">
+                      {analysis.transactions.filter((t: any) => t.transaction_type === "DEBIT").length}
+                    </p>
+                  </div>
+                </div>
+
+
+                {/* 3. Wealth Chart (Smaller) */}
+                <div className="brutalist-card p-6 bg-white border-2 shadow-brutalist relative overflow-hidden">
+                  <div className="mb-4 relative z-10 border-b-2 border-black pb-2">
+                    <h4 className="font-arcade text-sm mb-1 text-black tracking-tight">TRAJECTORY</h4>
+                  </div>
+                  <div className="h-[200px] relative z-10">
                     <WealthChart data={wealthData} />
                   </div>
                 </div>
@@ -464,14 +492,11 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="w-full overflow-hidden">
-          <h1 className="text-[13vw] leading-[0.8] font-black text-black text-center tracking-tighter select-none -mb-1 md:-mb-3">
-            RUPEE ROAS
-            <span className="text-transparent bg-clip-text bg-[linear-gradient(to_bottom,transparent_40%,black_80%),linear-gradient(180deg,#EA580C_0%,#DC2626_30%,#000000_60%,#EA580C_100%)] bg-[length:100%_100%,100%_200%] animate-lava-slow drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]">
-              T
-            </span>
+          <h1 className="text-[13vw] leading-[0.8] font-black text-transparent bg-clip-text bg-[linear-gradient(to_bottom,transparent_40%,black_80%),linear-gradient(180deg,#EA580C_0%,#DC2626_30%,#000000_60%,#EA580C_100%)] bg-[length:100%_100%,100%_200%] animate-lava-slow drop-shadow-[0_0_10px_rgba(220,38,38,0.5)] text-center tracking-tighter select-none -mb-1 md:-mb-3">
+            RUPEE ROAST
           </h1>
         </div>
       </footer>
-    </main>
+    </main >
   );
 }

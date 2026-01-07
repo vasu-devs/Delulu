@@ -14,7 +14,7 @@ export default function RoastCard({ roast }: RoastCardProps) {
         <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="brutalist-card !bg-white p-8 md:p-12 relative group overflow-hidden border-2 shadow-brutalist"
+            className="brutalist-card !bg-[#FFFBEB] p-8 md:p-14 relative group overflow-hidden border-2 border-black shadow-brutalist w-full"
         >
             {/* Tactical Decal */}
             <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
@@ -23,34 +23,37 @@ export default function RoastCard({ roast }: RoastCardProps) {
 
             <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
                 <div className="shrink-0 flex flex-col items-center">
-                    <div className="w-20 h-20 bg-secondary rounded-none border-2 border-black flex items-center justify-center shadow-brutalist relative">
-                        <ShieldAlert className="w-10 h-10 text-white" />
+                    <div className="w-20 h-20 bg-secondary/10 rounded-full border-2 border-black flex items-center justify-center shadow-brutalist relative">
+                        <ShieldAlert className="w-10 h-10 text-secondary" />
                     </div>
                     <div className="mt-8 text-center space-y-4">
-                        <span className="block font-mono font-bold text-[10px] text-black/40 uppercase tracking-widest">Audit Log</span>
-                        <div className="px-4 py-2 bg-black border-2 border-black flex items-center gap-3">
-                            <div className="w-2 h-2 bg-primary animate-pulse" />
-                            <span className="font-mono font-bold text-[9px] text-primary uppercase tracking-widest">Active</span>
+                        <div className="flex flex-col items-center gap-1">
+                            <span className="block font-mono font-bold text-[9px] text-zinc-400 uppercase tracking-[0.2em]">Forensic Audit</span>
+                            <span className="block font-mono font-black text-[10px] text-black/20">#LOG_8829_PX</span>
+                        </div>
+                        <div className="px-5 py-2.5 bg-black border-2 border-black flex items-center gap-3 shadow-[4px_4px_0px_rgba(0,0,0,0.1)]">
+                            <div className="w-1.5 h-1.5 bg-primary animate-pulse rounded-full shadow-[0_0_8px_#EA580C]" />
+                            <span className="font-mono font-black text-[10px] text-white uppercase tracking-widest">ACTIVE_SCAN</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex-1 max-w-none text-black overflow-hidden font-mono">
+                <div className="flex-1 max-w-none text-zinc-900 overflow-hidden font-mono">
                     <ReactMarkdown
                         components={{
-                            p: ({ children }) => <p className="text-lg md:text-xl font-bold leading-relaxed text-black mb-6 tracking-tight">{children}</p>,
-                            strong: ({ children }) => <strong className="text-secondary font-black underline decoration-2 underline-offset-4">{children}</strong>,
+                            p: ({ children }) => <p className="text-lg font-medium leading-loose text-zinc-800 mb-6 tracking-normal">{children}</p>,
+                            strong: ({ children }) => <strong className="text-secondary font-bold underline decoration-2 underline-offset-4">{children}</strong>,
                             li: ({ children }) => (
                                 <motion.li
                                     initial={{ opacity: 0, x: -10 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    className="text-base text-black/80 font-bold mb-4 flex gap-4 items-start before:content-['>>'] before:text-primary before:font-black before:text-xs before:mt-1"
+                                    className="text-base text-zinc-600 font-medium mb-3 flex gap-4 items-start before:content-['>'] before:text-primary before:font-black before:text-xs before:mt-1.5"
                                 >
                                     {children}
                                 </motion.li>
                             ),
                             ul: ({ children }) => <ul className="list-none p-0 my-6 space-y-2">{children}</ul>,
-                            h2: ({ children }) => <h2 className="font-arcade text-sm text-secondary mt-10 mb-6 border-b-2 border-secondary/10 pb-3 tracking-tight">{children}</h2>
+                            h2: ({ children }) => <h2 className="font-arcade text-sm text-secondary mt-8 mb-4 border-b border-zinc-200 pb-2 tracking-wide uppercase">{children}</h2>
                         }}
                     >
                         {roast}

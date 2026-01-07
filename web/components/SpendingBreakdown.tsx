@@ -128,7 +128,7 @@ export default function SpendingBreakdown({ analysis }: SpendingBreakdownProps) 
 
                 <div className="receipt-edge h-4 w-full opacity-10" />
 
-                <div className="p-6 space-y-2 relative bg-white">
+                <div className="p-6 space-y-2 relative bg-white max-h-[500px] overflow-y-auto custom-scrollbar">
                     <div className="absolute inset-0 pointer-events-none opacity-5 bg-white" />
 
                     {analysis.transactions.map((t, i) => {
