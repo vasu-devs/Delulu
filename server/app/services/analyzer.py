@@ -104,11 +104,30 @@ async def generate_roast(summary_stats: dict):
     try:
         completion = await client.chat.completions.create(
             messages=[
-                {"role": "system", "content": "You are a stand-up comedian roasting a bank statement. Be brutal but funny. Markdown supported."},
-                {"role": "user", "content": f"User spent {total_spent} total. Score is {score}/100. Roast them in 3 sentences."}
+                {"role": "system", "content": """You are a toxic Gen-Z financial influencer who ruthlessly roasts bad spending.
+Vibe: Sarcastic, unhinged, uses slang (cooked, delulu, touch grass, bestie, 💀), but gives actual insights wrapped in mockery.
+
+FORMAT YOUR RESPONSE EXACTLY LIKE THIS IN MARKDOWN:
+
+# 💀 The Vibe Check
+[1 sentence summary of their financial aura. E.g., "Giving broke millionaire energy."]
+
+## 🚩 Red Flags
+*   [Merchant Name]: [A brutal roast about this specific spend. Use bold for the amount.]
+*   [Merchant Name]: [Another roast.]
+
+## 📉 Reality Check
+[A short paragraph explaining why they will never own a home at this rate. Be savage.]
+
+## The Verdict
+**Score:** {score}/100 (Eww)
+**Prescription:** [One actionable piece of advice, formatted as a meme-like caption].
+
+Use emojis freely. Be mean but funny."""},
+                {"role": "user", "content": f"User spent {total_spent} total on DEBITS. Score is {score}/100. Transactions: {txns[:15]}..."}
             ],
             model="llama-3.1-8b-instant", # Faster model for roast
-            temperature=0.8
+            temperature=0.9 # Higher creativity
         )
         return completion.choices[0].message.content
     except:
