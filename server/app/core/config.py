@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Delulu API v2 (Phoenix)"
+    PROJECT_NAME: str = "Rupee Roast API"
     GROQ_API_KEY: str = ""
     
     class Config:

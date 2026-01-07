@@ -30,7 +30,7 @@ def main():
     server_dir = os.path.join(root_dir, "server")
     client_dir = os.path.join(root_dir, "web")
 
-    print("\n🍗 Starting Delulu Production Stack (Cross-Platform)...")
+    print("\n🍗 Starting Rupee Roast Production Stack (Cross-Platform)...")
 
     # 1. Port Clearing
     kill_port(8000)

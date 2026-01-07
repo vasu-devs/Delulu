@@ -1,8 +1,8 @@
-# Finanjo 🚀
+# Rupee Roast 🚀
 
 > **"Delulu is not the solulu. Data is."**
 
-Finanjo is a powerful, AI-driven financial analysis tool designed to "roast" your spending habits while providing deep, data-backed insights. By leveraging advanced PDF extraction, large language models (Groq/Gemini), and interactive visualizations, Finanjo turns your messy bank statements into actionable financial intelligence (and emotional damage).
+Rupee Roast is a powerful, AI-driven financial analysis tool designed to "roast" your spending habits while providing deep, data-backed insights. By leveraging advanced PDF extraction, large language models (Groq/Gemini), and interactive visualizations, Rupee Roast turns your messy bank statements into actionable financial intelligence (and emotional damage).
 
 ![Project Status](https://img.shields.io/badge/Status-Active_Development-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-blue)
