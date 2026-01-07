@@ -43,12 +43,15 @@ async def analyze_markdown(markdown_text: str):
 I will give you a Bank Statement converted to MARKDOWN.
 Your job is to extract ALL transactions into strict JSON.
 
-RULES:
-1. **DEBIT** = Money Out (Dr, Debit, Withdrawal, Payment to...)
-2. **CREDIT** = Money In (Cr, Credit, Deposit, Refund, Received from...)
-3. **Category**: Guess based on merchant name.
-4. **is_impulsive**: True if DEBIT > 500 AND category is (Food, Shopping, Travel).
-5. **Score**: 0 (Bad) to 100 (Good). Deduct points for high impulse spending.
+CRITICAL RULES:
+1. **NO HALLUCINATIONS**: If the input does not contain a transaction table, return empty list. Do NOT invent data.
+2. **Scan for Tables**: Look for dates, amounts, and merchant names in table rows.
+3. **Ignore Noise**: Ignore "Enter Password", legal disclaimers, or page headers.
+4. **DEBIT**: Money Out (Dr, Debit, Withdrawal, Payment to...)
+5. **CREDIT**: Money In (Cr, Credit, Deposit, Refund, Received from...)
+6. **is_impulsive**: True if DEBIT > 500 AND category is (Food, Shopping, Travel).
+
+If the input is garbage or empty, return {{"transactions": [], "financial_health_score": 0}}.
 
 OUTPUT SCHEMA: {json.dumps(SCHEMA)}
 """
@@ -73,10 +76,10 @@ OUTPUT SCHEMA: {json.dumps(SCHEMA)}
         for t in data.get("transactions", []):
             txns.append({
                 "merchant": t.get("merchant", "Unknown"),
-                "amount": float(t.get("amount", 0)),
-                "transaction_type": t.get("type", "DEBIT"),
-                "category": t.get("category", "Other"),
-                "is_impulsive": t.get("is_impulsive", False),
+                "amount": abs(float(t.get("amount", 0))), 
+                "transaction_type": t.get("type", "DEBIT").upper(), 
+                "category": t.get("category") or "Other",
+                "is_impulsive": t.get("is_impulsive", False) or (t.get("type", "DEBIT").upper() == "DEBIT" and abs(float(t.get("amount", 0))) > 500 and t.get("category") in ["Shopping", "Food", "Travel", "Entertainment"]),
                 "date": t.get("date", "")
             })
             
@@ -104,30 +107,39 @@ async def generate_roast(summary_stats: dict):
     try:
         completion = await client.chat.completions.create(
             messages=[
-                {"role": "system", "content": """You are a toxic Gen-Z financial influencer who ruthlessly roasts bad spending.
-Vibe: Sarcastic, unhinged, uses slang (cooked, delulu, touch grass, bestie, 💀), but gives actual insights wrapped in mockery.
+                {"role": "system", "content": """You are a Hedge Fund Analyst with a Gen-Z personality disorder. 
+You are high-IQ, quant-focused, but you speak in brainrot.
 
-FORMAT YOUR RESPONSE EXACTLY LIKE THIS IN MARKDOWN:
+**YOUR GOAL**: Roast the user by exposing their SPECIFIC financial stupidity using data. Do not just say "you spend too much." Say "You spent 15% of your income on bean water."
 
-# 💀 The Vibe Check
-[1 sentence summary of their financial aura. E.g., "Giving broke millionaire energy."]
+**ANALYSIS STEP (Do this internally, then roast):**
+1. **Identify Patterns**: High frequency small txns? (Latte factor). Huge one-off splurges? (Impulse control). Recurring unused subs?
+2. **Category Weight**: excessive dining out vs investments?
+3. **Merchant Specifics**: Identify the exact brands draining them (Uber, Starbucks, Zomato).
 
-## 🚩 Red Flags
-*   [Merchant Name]: [A brutal roast about this specific spend. Use bold for the amount.]
-*   [Merchant Name]: [Another roast.]
+**OUTPUT FORMAT (Markdown):**
 
-## 📉 Reality Check
-[A short paragraph explaining why they will never own a home at this rate. Be savage.]
+# 🧠 The Diagnosis: [2-word savage summary, e.g., "Terminal Consumerism"]
 
-## The Verdict
-**Score:** {score}/100 (Eww)
-**Prescription:** [One actionable piece of advice, formatted as a meme-like caption].
+## 🕵️ The Receipts (Data-Driven Roast)
+*   **The [Brand Name] Addiction**: "Bestie, you visited [Brand] [X] times. That's ₹[Amount] you could have put into an SIP. Are you trying to personally fund their IPO?"
+*   **The "Little Treat" Trap**: "You have [X] transactions under ₹500. It's giving 'death by a thousand cuts'."
+*   **Subscription Rot**: "Do you even use these? Cancel them or I'm calling the police."
 
-Use emojis freely. Be mean but funny."""},
-                {"role": "user", "content": f"User spent {total_spent} total on DEBITS. Score is {score}/100. Transactions: {txns[:15]}..."}
+## 📉 Why You're Cooked (The Insight)
+[A paragraph explaining the MACRO impact of their micro-spending. Explain compounding interest in reverse. Be smart but mean.]
+
+## 💊 The Fix (Actionable Steps)
+1.  **Stop**: [Specific thing to stop doing immediately]
+2.  **Start**: [Specific smart money move]
+3.  **Mantra**: "[A funny but wise mantra for them]"
+
+**Score:** {score}/100 (Financial Literacy Level: Toddler)
+"""},
+                {"role": "user", "content": f"User Financial Data:\nTotal Debits: ₹{total_spent}\nScore: {score}\nTop Merchants & Frequency: {txns[:20]}"}
             ],
-            model="llama-3.1-8b-instant", # Faster model for roast
-            temperature=0.9 # Higher creativity
+            model="llama-3.1-8b-instant",
+            temperature=0.85 
         )
         return completion.choices[0].message.content
     except:
